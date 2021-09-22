@@ -14,8 +14,8 @@ def search_job(vacancy):
 
 for vacancy in vacancies:
     count_vacancies = search_job(vacancy)
-    job_name = vacancy
-    vacancies_statistics[job_name] = count_vacancies
+    job_title = vacancy
+    vacancies_statistics[job_title] = count_vacancies
 
 
 pprint.pprint(vacancies_statistics)
