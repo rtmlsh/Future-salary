@@ -22,7 +22,7 @@ def give_statistics(url):
     pprint.pprint(vacancies_statistics)
 
 
-def find_out_salary(url, vacancy):
+def predict_rub_salary(url, vacancy):
     job_vacation = search_job(vacancy, url)
     for job in job_vacation['items']:
         if job['salary']['currency'] != 'RUR':
@@ -35,7 +35,5 @@ def find_out_salary(url, vacancy):
             print(job['salary']['to'] * 0.8)
 
 
-
-
-find_out_salary(url, vacancy)
+predict_rub_salary(url, vacancy)
 # give_statistics(url)
