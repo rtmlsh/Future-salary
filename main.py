@@ -1,34 +1,35 @@
 import requests
 import pprint
 import numpy
+from itertools import count
 
 
-def search_job(vacancy, url):
-    payload = {'text': f'Программист {vacancy}', 'area': 1, 'period': 30, 'only_with_salary': 'True'}
+def search_job(language, url):
+    payload = {'text': f'Программист {language}', 'area': 1, 'period': 30, 'only_with_salary': 'True'}
     response = requests.get(url, params=payload)
     response.raise_for_status()
     return response.json()
 
 
-def predict_rub_salary(vacancies):
+def predict_rub_salary(language, url):
+    salary_bracket = get_salaries(language, url)
     job_salaries = []
-    for salary in vacancies['items']:
-        if salary['salary']['currency'] != 'RUR':
+    for salary in salary_bracket:
+        if salary['currency'] != 'RUR':
             None
-        elif salary['salary']['from'] and salary['salary']['to']:
-            job_salaries.append(numpy.mean([salary['salary']['from'], salary['salary']['to']]))
-        elif salary['salary']['from']:
-            job_salaries.append(salary['salary']['from'] * 1.2)
+        elif salary['from'] and salary['to']:
+            job_salaries.append(numpy.mean([salary['from'], salary['to']]))
+        elif salary['from']:
+            job_salaries.append(salary['from'] * 1.2)
         else:
-            job_salaries.append(salary['salary']['to'] * 0.8)
+            job_salaries.append(salary['to'] * 0.8)
     return job_salaries
 
 
-def find_out_vacancies(programming_languages):
+def average_salaries(programming_languages, url):
     vacancies_jobs = {}
     for language in programming_languages:
-        vacancies = search_job(language, url)
-        average_salaries = predict_rub_salary(vacancies)
+        average_salaries = predict_rub_salary(language, url)
         vacancies_jobs[language] = {
             'vacancies_found': search_job(language, url)['found'],
             'vacancies_processed': len(average_salaries),
@@ -37,8 +38,29 @@ def find_out_vacancies(programming_languages):
     pprint.pprint(vacancies_jobs)
 
 
+def get_salaries(language, url):
+    language_statistics = search_job(language, url)
+    salary_information = []
+    for page in count(0):
+        for salary in language_statistics['items']:
+            salary_information.append(salary['salary'])
+        if page >= language_statistics['pages']:
+            break
+    return salary_information
+
+
 url = 'https://api.hh.ru/vacancies/'
-programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
-find_out_vacancies(programming_languages)
+# programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
+# average_salaries(programming_languages, url)
+language = 'Scala'
 
 
+
+
+
+print(search_job(language, url)['found'])
+# pprint.pprint((search_job(language, url)))
+print(len(get_salaries(language, url)))
+# pprint.pprint(get_salaries(language, url))
+print(len(predict_rub_salary(language, url)))
+# pprint.pprint(predict_rub_salary(language, url))
