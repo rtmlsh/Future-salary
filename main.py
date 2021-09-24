@@ -4,8 +4,8 @@ import numpy
 from itertools import count
 
 
-def search_job(language, url):
-    payload = {'text': f'Программист {language}', 'area': 1, 'period': 30, 'only_with_salary': 'True'}
+def search_job(language, url, page=None):
+    payload = {'text': f'Программист {language}', 'area': 1, 'period': 30, 'only_with_salary': 'True', 'page': page}
     response = requests.get(url, params=payload)
     response.raise_for_status()
     return response.json()
@@ -26,6 +26,17 @@ def predict_rub_salary(language, url):
     return job_salaries
 
 
+def get_salaries(language, url):
+    salary_information = []
+    for page in count(0):
+        language_statistics = search_job(language, url, page=page)
+        for salary in language_statistics['items']:
+            salary_information.append(salary['salary'])
+        if page >= language_statistics['pages']:
+            break
+    return salary_information
+
+
 def average_salaries(programming_languages, url):
     vacancies_jobs = {}
     for language in programming_languages:
@@ -38,29 +49,8 @@ def average_salaries(programming_languages, url):
     pprint.pprint(vacancies_jobs)
 
 
-def get_salaries(language, url):
-    language_statistics = search_job(language, url)
-    salary_information = []
-    for page in count(0):
-        for salary in language_statistics['items']:
-            salary_information.append(salary['salary'])
-        if page >= language_statistics['pages']:
-            break
-    return salary_information
-
 
 url = 'https://api.hh.ru/vacancies/'
-# programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
-# average_salaries(programming_languages, url)
-language = 'Scala'
+programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
+average_salaries(programming_languages, url)
 
-
-
-
-
-print(search_job(language, url)['found'])
-# pprint.pprint((search_job(language, url)))
-print(len(get_salaries(language, url)))
-# pprint.pprint(get_salaries(language, url))
-print(len(predict_rub_salary(language, url)))
-# pprint.pprint(predict_rub_salary(language, url))
