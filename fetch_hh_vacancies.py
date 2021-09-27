@@ -7,7 +7,8 @@ from itertools import count
 def search_vacations(language, url, page=None):
     payload = {
         'text': f'Программист {language}',
-        'area': 1, 'period': 30,
+        'area': 1,
+        'period': 30,
         'only_with_salary': 'True',
         'page': page
     }
@@ -56,4 +57,5 @@ def average_salaries(programming_languages, url):
 url = 'https://api.hh.ru/vacancies/'
 programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
 average_salaries(programming_languages, url)
+
 

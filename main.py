@@ -1,12 +1,75 @@
 import requests
+import numpy
+import math
+import os
+from dotenv import load_dotenv
+from itertools import count
 import pprint
 
-superjob_api = 'v3.r.124446881.cc370bafaaee6098c089f335a7902bc241c1bc02.28bcb2cd6a9e7b9d79fd7930896a81a00d847dd6'
-url = 'https://api.superjob.ru/2.0/vacancies/'
 
-header = {'X-Api-App-Id': superjob_api}
-payload = {'catalogues': 33, 'keyword': 'Программист', 'town': 4}
-response = requests.get(url, headers=header, params=payload)
-response.raise_for_status()
-for profession in response.json()['objects']:
-    print(profession['profession'], profession['town']['title'])
+def search_superjob_vacancies(url, superjob_token, language, page=None):
+    header = {'X-Api-App-Id': superjob_token}
+    payload = {
+        'catalogues': 33,
+        'period': 30,
+        'keyword': f'Программист {language}',
+        'town': 4,
+        'page': page
+    }
+    response = requests.get(url, headers=header, params=payload)
+    response.raise_for_status()
+    return response.json()
+
+
+def predict_rub_salary_for_superjob(url, superjob_token, language):
+    salaries_bracket = get_salaries_bracket(url, superjob_token, language)
+    predictioned_salaries = []
+    for salary in salaries_bracket:
+        if salary['currency'] != 'rub':
+            None
+        elif salary['payment_from'] and salary['payment_to'] == 0:
+            None
+        elif salary['payment_from'] and salary['payment_to']:
+            predictioned_salaries.append(numpy.mean([salary['payment_from'], salary['payment_to']]))
+        elif salary['payment_from']:
+            predictioned_salaries.append(salary['payment_from'] * 1.2)
+        else:
+            predictioned_salaries.append(salary['payment_to'] * 0.8)
+    return predictioned_salaries
+
+
+def get_salaries_bracket(url, superjob_token, language):
+    salaries_bracket = []
+    for page in count(0):
+        vacations = search_superjob_vacancies(url, superjob_token, language, page=page)
+        all_pages = math.ceil(search_superjob_vacancies(url, superjob_token, language)['total'] / 20)
+        for vacancy in vacations['objects']:
+            salaries_bracket.append(
+                {
+                 'currency': vacancy['currency'],
+                 'payment_from': vacancy['payment_from'],
+                 'payment_to': vacancy['payment_to']
+                 }
+            )
+        if page >= all_pages: break
+    return salaries_bracket
+
+
+def average_salaries(programming_languages, url):
+    vacancies_jobs = {}
+    for language in programming_languages:
+        predictioned_salaries = predict_rub_salary_for_superjob(url, superjob_token, language)
+        vacancies_jobs[language] = {
+            'vacancies_found': search_superjob_vacancies(url, superjob_token, language)['total'],
+            'vacancies_processed': len(predictioned_salaries),
+            'average_salary': int(numpy.mean(predictioned_salaries))
+        }
+    pprint.pprint(vacancies_jobs)
+
+
+load_dotenv()
+superjob_token = os.getenv('SUPERJOB_API_KEY')
+programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
+url = 'https://api.superjob.ru/2.0/vacancies/'
+average_salaries(programming_languages, url)
+
