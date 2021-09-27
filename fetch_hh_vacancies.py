@@ -1,4 +1,5 @@
 import requests
+import pprint
 import numpy
 from itertools import count
 
@@ -50,6 +51,15 @@ def average_salaries(programming_languages, url):
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
+<<<<<<< HEAD
     return vacancies_jobs
+=======
+    pprint.pprint(vacancies_jobs)
+
+
+url = 'https://api.hh.ru/vacancies/'
+programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
+average_salaries(programming_languages, url)
+>>>>>>> parent of 875feda (Вывести статистику по зарплатам в таблицу)
 
 
