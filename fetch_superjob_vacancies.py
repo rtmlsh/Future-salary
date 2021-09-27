@@ -1,10 +1,9 @@
 import requests
 import numpy
 import math
+from itertools import count
 import os
 from dotenv import load_dotenv
-from itertools import count
-from terminaltables import AsciiTable
 
 
 def search_superjob_vacancies(url, superjob_token, language, page=None):
@@ -56,6 +55,8 @@ def get_salaries_bracket(url, superjob_token, language):
 
 
 def average_salaries(programming_languages, url):
+    load_dotenv()
+    superjob_token = os.getenv('SUPERJOB_API_KEY')
     vacancies_jobs = {}
     for language in programming_languages:
         predictioned_salaries = predict_rub_salary_for_superjob(url, superjob_token, language)
@@ -67,20 +68,8 @@ def average_salaries(programming_languages, url):
     return vacancies_jobs
 
 
-def table_data(programming_languages, url):
-    vacancies_jobs = average_salaries(programming_languages, url)
-    table_data = [['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']]
-    for language, statistics in vacancies_jobs.items():
-        table_data.append([language, statistics['vacancies_found'], statistics['vacancies_processed'], statistics['average_salary']])
-    table = AsciiTable(table_data)
-    table.title = 'Superjob'
-    return table.table
 
 
-load_dotenv()
-superjob_token = os.getenv('SUPERJOB_API_KEY')
-programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
-url = 'https://api.superjob.ru/2.0/vacancies/'
 
 
 
