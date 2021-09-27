@@ -51,11 +51,8 @@ def average_salaries(programming_languages, url):
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
-    pprint.pprint(vacancies_jobs)
+    return vacancies_jobs
 
 
-url = 'https://api.hh.ru/vacancies/'
-programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
-average_salaries(programming_languages, url)
 
 
