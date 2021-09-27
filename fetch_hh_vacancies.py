@@ -1,7 +1,7 @@
 import requests
-import pprint
 import numpy
 from itertools import count
+from terminaltables import AsciiTable
 
 
 def search_vacations(language, url, page=None):
@@ -51,11 +51,19 @@ def average_salaries(programming_languages, url):
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
-    pprint.pprint(vacancies_jobs)
+    return vacancies_jobs
+
+
+def table_data(programming_languages, url):
+    vacancies_jobs = average_salaries(programming_languages, url)
+    table_data = [['Язык программирования', 'Вакансий найдено', 'Вакансий обработано', 'Средняя зарплата']]
+    for language, statistics in vacancies_jobs.items():
+        table_data.append([language, statistics['vacancies_found'], statistics['vacancies_processed'], statistics['average_salary']])
+    table = AsciiTable(table_data)
+    table.title = 'Head Hunter'
+    return table.table
 
 
 url = 'https://api.hh.ru/vacancies/'
 programming_languages = ['Python', 'Java', 'Javascript', 'Go', 'Scala', 'Ruby', 'C++', 'PHP']
-average_salaries(programming_languages, url)
-
-
+print(table_data(programming_languages, url))
