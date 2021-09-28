@@ -1,5 +1,4 @@
 import requests
-import pprint
 import numpy
 from itertools import count
 
@@ -21,14 +20,16 @@ def predict_rub_salary(language, url):
     salaries_bracket = get_salaries_bracket(language, url)
     predictioned_salaries = []
     for salary in salaries_bracket:
-        if salary['currency'] != 'RUR':
-            None
-        elif salary['from'] and salary['to']:
-            predictioned_salaries.append(numpy.mean([salary['from'], salary['to']]))
-        elif salary['from']:
-            predictioned_salaries.append(salary['from'] * 1.2)
-        else:
-            predictioned_salaries.append(salary['to'] * 0.8)
+        if salary:
+            if salary['currency'] == 'RUR':
+                if salary['from'] and salary['to']:
+                    predictioned_salaries.append(numpy.mean([salary['from'], salary['to']]))
+                elif salary['from']:
+                    predictioned_salaries.append(salary['from'] * 1.2)
+                else:
+                    predictioned_salaries.append(salary['to'] * 0.8)
+            else:
+                None
     return predictioned_salaries
 
 
@@ -42,7 +43,7 @@ def get_salaries_bracket(language, url):
     return salaries_bracket
 
 
-def average_salaries(programming_languages, url):
+def average_hh_salaries(programming_languages, url):
     vacancies_jobs = {}
     for language in programming_languages:
         predictioned_salaries = predict_rub_salary(language, url)

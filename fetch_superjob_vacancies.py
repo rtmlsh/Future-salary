@@ -4,8 +4,8 @@ import math
 from itertools import count
 
 
-def search_superjob_vacancies(url, superjob_token, language, page=None):
-    header = {'X-Api-App-Id': superjob_token}
+def search_superjob_vacancies(url, sj_token, language, page=None):
+    header = {'X-Api-App-Id': sj_token}
     payload = {
         'catalogues': 33,
         'period': 30,
@@ -18,8 +18,8 @@ def search_superjob_vacancies(url, superjob_token, language, page=None):
     return response.json()
 
 
-def predict_rub_salary_for_superjob(url, superjob_token, language):
-    salaries_bracket = get_salaries_bracket(url, superjob_token, language)
+def predict_rub_salary_for_superjob(url, sj_token, language):
+    salaries_bracket = get_salaries_bracket(url, sj_token, language)
     predictioned_salaries = []
     for salary in salaries_bracket:
         if salary['currency'] != 'rub':
@@ -35,11 +35,11 @@ def predict_rub_salary_for_superjob(url, superjob_token, language):
     return predictioned_salaries
 
 
-def get_salaries_bracket(url, superjob_token, language):
+def get_salaries_bracket(url, sj_token, language):
     salaries_bracket = []
     for page in count(0):
-        vacations = search_superjob_vacancies(url, superjob_token, language, page=page)
-        all_pages = math.ceil(search_superjob_vacancies(url, superjob_token, language)['total'] / 20)
+        vacations = search_superjob_vacancies(url, sj_token, language, page=page)
+        all_pages = math.ceil(search_superjob_vacancies(url, sj_token, language)['total'] / 20)
         for vacancy in vacations['objects']:
             salaries_bracket.append(
                 {
@@ -52,19 +52,16 @@ def get_salaries_bracket(url, superjob_token, language):
     return salaries_bracket
 
 
-def average_salaries(programming_languages, url, superjob_token):
+def average_sj_salaries(programming_languages, url, sj_token):
     vacancies_jobs = {}
     for language in programming_languages:
-        predictioned_salaries = predict_rub_salary_for_superjob(url, superjob_token, language)
+        predictioned_salaries = predict_rub_salary_for_superjob(url, sj_token, language)
         vacancies_jobs[language] = {
-            'vacancies_found': search_superjob_vacancies(url, superjob_token, language)['total'],
+            'vacancies_found': search_superjob_vacancies(url, sj_token, language)['total'],
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
     return vacancies_jobs
-
-
-
 
 
 
