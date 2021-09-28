@@ -24,7 +24,9 @@ def predict_rub_salary(language, url):
         if salary:
             if salary['currency'] == 'RUR':
                 if salary['from'] and salary['to']:
-                    predictioned_salaries.append(numpy.mean([salary['from'], salary['to']]))
+                    predictioned_salaries.append(numpy.mean(
+                        [salary['from'], salary['to']]
+                    ))
                 elif salary['from']:
                     predictioned_salaries.append(salary['from'] * 1.2)
                 else:
@@ -40,7 +42,8 @@ def get_salaries_bracket(language, url):
         vacations = search_vacations(language, url, page=page)
         for salary in vacations['items']:
             salaries_bracket.append(salary['salary'])
-        if page >= vacations['pages']: break
+        if page >= vacations['pages']:
+            break
     return salaries_bracket
 
 
@@ -54,7 +57,3 @@ def average_hh_salaries(programming_languages, url):
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
     return vacancies_jobs
-
-
-
-
