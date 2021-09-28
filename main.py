@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from terminaltables import AsciiTable
 
 from fetch_hh_vacancies import average_hh_salaries
-from fetch_superjob_vacancies import average_sj_salaries
+from fetch_sj_vacancies import average_sj_salaries
 
 
 def show_hh_table(programming_languages, url):
