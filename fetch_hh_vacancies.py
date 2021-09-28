@@ -48,12 +48,12 @@ def get_salaries_bracket(language, url):
 
 
 def average_hh_salaries(programming_languages, url):
-    vacancies_jobs = {}
+    salary_statistics = {}
     for language in programming_languages:
         predictioned_salaries = predict_rub_salary(language, url)
-        vacancies_jobs[language] = {
+        salary_statistics[language] = {
             'vacancies_found': search_vacancies(language, url)['found'],
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
-    return vacancies_jobs
+    return salary_statistics

@@ -42,11 +42,11 @@ def get_salaries_bracket(language, url, sj_token):
     salaries_bracket = []
     page_result = 20
     for page in count(0):
-        vacations = search_sj_vacancies(language, url, sj_token, page=page)
+        vacancies = search_sj_vacancies(language, url, sj_token, page=page)
         all_pages = math.ceil(search_sj_vacancies(
             language, url, sj_token)['total'] / page_result
                               )
-        for vacancy in vacations['objects']:
+        for vacancy in vacancies['objects']:
             salaries_bracket.append(
                 {
                  'currency': vacancy['currency'],
@@ -60,14 +60,14 @@ def get_salaries_bracket(language, url, sj_token):
 
 
 def average_sj_salaries(programming_languages, url, sj_token):
-    vacancies_jobs = {}
+    salary_statistics = {}
     for language in programming_languages:
         predictioned_salaries = predict_rub_salary_for_sj \
             (language, url, sj_token)
-        vacancies_jobs[language] = {
+        salary_statistics[language] = {
             'vacancies_found': search_sj_vacancies(language, url, sj_token)
             ['total'],
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
-    return vacancies_jobs
+    return salary_statistics
