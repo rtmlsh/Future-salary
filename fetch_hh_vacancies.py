@@ -4,7 +4,7 @@ import numpy
 import requests
 
 
-def search_vacations(language, url, page=None):
+def search_vacancies(language, url, page=None):
     payload = {
         'text': f'Программист {language}',
         'area': 1,
@@ -39,9 +39,9 @@ def predict_rub_salary(language, url):
 def get_salaries_bracket(language, url):
     salaries_bracket = []
     for page in count(0):
-        vacations = search_vacations(language, url, page=page)
-        for salary in vacations['items']:
-            salaries_bracket.append(salary['salary'])
+        vacations = search_vacancies(language, url, page=page)
+        for salary_bracket in vacations['items']:
+            salaries_bracket.append(salary_bracket['salary'])
         if page >= vacations['pages']:
             break
     return salaries_bracket
@@ -52,7 +52,7 @@ def average_hh_salaries(programming_languages, url):
     for language in programming_languages:
         predictioned_salaries = predict_rub_salary(language, url)
         vacancies_jobs[language] = {
-            'vacancies_found': search_vacations(language, url)['found'],
+            'vacancies_found': search_vacancies(language, url)['found'],
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
