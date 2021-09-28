@@ -1,6 +1,7 @@
-import requests
-import numpy
 from itertools import count
+
+import numpy
+import requests
 
 
 def search_vacations(language, url, page=None):

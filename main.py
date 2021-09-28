@@ -1,8 +1,10 @@
-from fetch_superjob_vacancies import average_sj_salaries
-from fetch_hh_vacancies import average_hh_salaries
 import os
+
 from dotenv import load_dotenv
 from terminaltables import AsciiTable
+
+from fetch_hh_vacancies import average_hh_salaries
+from fetch_superjob_vacancies import average_sj_salaries
 
 
 def get_hh_table(programming_languages, url):
