@@ -1,3 +1,4 @@
+import argparse
 import os
 
 from dotenv import load_dotenv
@@ -55,6 +56,12 @@ def show_sj_table(programming_languages, url, sj_token):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        description='Скрипт интегрируется с API Head Hunter, Superjob, '
+                    'и показывает статистику зарплат по вакансиям программистов'
+    )
+    parser.parse_args()
+
     load_dotenv()
     sj_token = os.getenv('SUPERJOB_API_KEY')
 
