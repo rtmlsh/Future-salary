@@ -8,8 +8,8 @@ from fetch_superjob_vacancies import average_sj_salaries
 
 
 def get_hh_table(programming_languages, url):
-    vacancies_jobs = average_hh_salaries(programming_languages, url)
-    table_data = [
+    salary_statistics = average_hh_salaries(programming_languages, url)
+    hh_table_stats = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -17,22 +17,22 @@ def get_hh_table(programming_languages, url):
             'Средняя зарплата'
         ]
     ]
-    for language, statistics in vacancies_jobs.items():
-        table_data.append(
+    for language, statistics in salary_statistics.items():
+        hh_table_stats.append(
             [
                 language, statistics['vacancies_found'],
                 statistics['vacancies_processed'],
                 statistics['average_salary']
             ]
         )
-    table = AsciiTable(table_data)
+    table = AsciiTable(hh_table_stats)
     table.title = 'Head Hunter'
     print(table.table)
 
 
 def get_sj_table(programming_languages, url, sj_token):
-    vacancies_jobs = average_sj_salaries(programming_languages, url, sj_token)
-    table_data = [
+    salary_statistics = average_sj_salaries(programming_languages, url, sj_token)
+    sj_table_stats = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -40,8 +40,8 @@ def get_sj_table(programming_languages, url, sj_token):
             'Средняя зарплата'
         ]
     ]
-    for language, statistics in vacancies_jobs.items():
-        table_data.append(
+    for language, statistics in salary_statistics.items():
+        sj_table_stats.append(
             [
                 language,
                 statistics['vacancies_found'],
@@ -49,7 +49,7 @@ def get_sj_table(programming_languages, url, sj_token):
                 statistics['average_salary']
             ]
         )
-    table = AsciiTable(table_data)
+    table = AsciiTable(sj_table_stats)
     table.title = 'Superjob'
     print(table.table)
 
