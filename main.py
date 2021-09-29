@@ -21,7 +21,8 @@ def show_hh_table(programming_languages, url):
     for language, statistics in salary_statistics.items():
         hh_table_stats.append(
             [
-                language, statistics['vacancies_found'],
+                language,
+                statistics['vacancies_found'],
                 statistics['vacancies_processed'],
                 statistics['average_salary']
             ]
