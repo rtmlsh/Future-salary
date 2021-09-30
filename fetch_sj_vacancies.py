@@ -44,8 +44,10 @@ def get_salaries(language, url, sj_token):
     for page in count(0):
         vacancies = search_sj_vacancies(language, url, sj_token, page=page)
         all_pages = math.ceil(search_sj_vacancies(
-            language, url, sj_token)['total'] / page_result
-                              )
+            language,
+            url,
+            sj_token
+        )['total'] / page_result)
         for vacancy in vacancies['objects']:
             salaries.append(
                 {
@@ -62,8 +64,11 @@ def get_salaries(language, url, sj_token):
 def average_sj_salaries(programming_languages, url, sj_token):
     salary_statistics = {}
     for language in programming_languages:
-        predictioned_salaries = predict_rub_salary_for_sj \
-            (language, url, sj_token)
+        predictioned_salaries = predict_rub_salary_for_sj(
+            language,
+            url,
+            sj_token
+        )
         salary_statistics[language] = {
             'vacancies_found': search_sj_vacancies(language, url, sj_token)
             ['total'],
