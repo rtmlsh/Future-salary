@@ -8,8 +8,9 @@ from fetch_hh_vacancies import average_hh_salaries
 from fetch_sj_vacancies import average_sj_salaries
 
 
-def show_hh_table(programming_languages, url):
-    salary_statistics = average_hh_salaries(programming_languages, url)
+def show_hh_table(programming_languages):
+    hh_api_url = 'https://api.hh.ru/vacancies/'
+    salary_statistics = average_hh_salaries(programming_languages, hh_api_url)
     hh_table_stats = [
         [
             'Язык программирования',
@@ -32,8 +33,9 @@ def show_hh_table(programming_languages, url):
     print(table.table)
 
 
-def show_sj_table(programming_languages, url, sj_token):
-    salary_statistics = average_sj_salaries(programming_languages, url, sj_token)
+def show_sj_table(programming_languages, sj_token):
+    sj_api_url = 'https://api.superjob.ru/2.0/vacancies/'
+    salary_statistics = average_sj_salaries(programming_languages, sj_api_url, sj_token)
     sj_table_stats = [
         [
             'Язык программирования',
@@ -77,8 +79,5 @@ if __name__ == '__main__':
         'PHP'
     ]
 
-    sj_api_url = 'https://api.superjob.ru/2.0/vacancies/'
-    hh_api_url = 'https://api.hh.ru/vacancies/'
-
-    show_sj_table(programming_languages, sj_api_url, sj_token)
-    show_hh_table(programming_languages, hh_api_url)
+    show_sj_table(programming_languages, sj_token)
+    show_hh_table(programming_languages)
