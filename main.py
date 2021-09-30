@@ -8,10 +8,8 @@ from fetch_hh_vacancies import average_hh_salaries
 from fetch_sj_vacancies import average_sj_salaries
 
 
-def show_hh_table(programming_languages):
-    hh_api_url = 'https://api.hh.ru/vacancies/'
-    salary_statistics = average_hh_salaries(programming_languages, hh_api_url)
-    hh_table_stats = [
+def insert_table(salary_statistics):
+    table_stats = [
         [
             'Язык программирования',
             'Вакансий найдено',
@@ -20,7 +18,7 @@ def show_hh_table(programming_languages):
         ]
     ]
     for language, statistics in salary_statistics.items():
-        hh_table_stats.append(
+        table_stats.append(
             [
                 language,
                 statistics['vacancies_found'],
@@ -28,6 +26,13 @@ def show_hh_table(programming_languages):
                 statistics['average_salary']
             ]
         )
+    return table_stats
+
+
+def show_hh_table(programming_languages):
+    hh_api_url = 'https://api.hh.ru/vacancies/'
+    salary_statistics = average_hh_salaries(programming_languages, hh_api_url)
+    hh_table_stats = insert_table(salary_statistics)
     table = AsciiTable(hh_table_stats)
     table.title = 'Head Hunter'
     print(table.table)
@@ -36,23 +41,7 @@ def show_hh_table(programming_languages):
 def show_sj_table(programming_languages, sj_token):
     sj_api_url = 'https://api.superjob.ru/2.0/vacancies/'
     salary_statistics = average_sj_salaries(programming_languages, sj_api_url, sj_token)
-    sj_table_stats = [
-        [
-            'Язык программирования',
-            'Вакансий найдено',
-            'Вакансий обработано',
-            'Средняя зарплата'
-        ]
-    ]
-    for language, statistics in salary_statistics.items():
-        sj_table_stats.append(
-            [
-                language,
-                statistics['vacancies_found'],
-                statistics['vacancies_processed'],
-                statistics['average_salary']
-            ]
-        )
+    sj_table_stats = insert_table(salary_statistics)
     table = AsciiTable(sj_table_stats)
     table.title = 'Superjob'
     print(table.table)
