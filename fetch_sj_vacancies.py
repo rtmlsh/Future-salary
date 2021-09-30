@@ -20,9 +20,9 @@ def search_sj_vacancies(language, url, sj_token, page=None):
 
 
 def predict_rub_salary_for_sj(language, url, sj_token):
-    salaries_bracket = get_salaries_bracket(language, url, sj_token)
+    salaries = get_salaries(language, url, sj_token)
     predictioned_salaries = []
-    for salary in salaries_bracket:
+    for salary in salaries:
         if salary['currency'] != 'rub':
             None
         elif salary['payment_from'] and salary['payment_to'] == 0:
@@ -38,8 +38,8 @@ def predict_rub_salary_for_sj(language, url, sj_token):
     return predictioned_salaries
 
 
-def get_salaries_bracket(language, url, sj_token):
-    salaries_bracket = []
+def get_salaries(language, url, sj_token):
+    salaries = []
     page_result = 20
     for page in count(0):
         vacancies = search_sj_vacancies(language, url, sj_token, page=page)
@@ -47,7 +47,7 @@ def get_salaries_bracket(language, url, sj_token):
             language, url, sj_token)['total'] / page_result
                               )
         for vacancy in vacancies['objects']:
-            salaries_bracket.append(
+            salaries.append(
                 {
                  'currency': vacancy['currency'],
                  'payment_from': vacancy['payment_from'],
@@ -56,7 +56,7 @@ def get_salaries_bracket(language, url, sj_token):
             )
         if page >= all_pages:
             break
-    return salaries_bracket
+    return salaries
 
 
 def average_sj_salaries(programming_languages, url, sj_token):
