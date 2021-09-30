@@ -26,7 +26,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ``` 
 
-Скрипт работает с переменными окружения для взаимодействия с API [Superjob](https://api.superjob.ru). Для успешной работы скрипта необходимо получить токен API Superjob и записать их в .env файл: 
+Скрипт работает с переменными окружения для взаимодействия с API [Superjob](https://api.superjob.ru). Для успешной работы скрипта необходимо получить токен API Superjob и записать его в .env файл: 
 
 ``` 
 echo SUPERJOB_TOKEN=токен > .env
