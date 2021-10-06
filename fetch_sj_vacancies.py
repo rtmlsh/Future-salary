@@ -4,6 +4,8 @@ from itertools import count
 import numpy
 import requests
 
+from count_average_salaries import predict_salary_sj
+
 
 def search_sj_vacancies(language, url, sj_token, page=None):
     header = {'X-Api-App-Id': sj_token}
@@ -23,18 +25,10 @@ def predict_rub_salary_for_sj(language, url, sj_token):
     salaries = get_salaries(language, url, sj_token)
     predictioned_salaries = []
     for salary in salaries:
-        if salary['currency'] != 'rub':
-            None
-        elif salary['payment_from'] and salary['payment_to'] == 0:
-            None
-        elif salary['payment_from'] and salary['payment_to']:
-            predictioned_salaries.append(numpy.mean(
-                [salary['payment_from'], salary['payment_to']]
-            ))
-        elif salary['payment_from']:
-            predictioned_salaries.append(salary['payment_from'] * 1.2)
-        else:
-            predictioned_salaries.append(salary['payment_to'] * 0.8)
+        currency = salary['currency']
+        payment_from = salary['payment_from']
+        payment_to = salary['payment_to']
+        predict_salary_sj(currency, payment_from, payment_to, predictioned_salaries)
     return predictioned_salaries
 
 
