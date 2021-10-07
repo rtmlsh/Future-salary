@@ -3,7 +3,7 @@ from itertools import count
 import numpy
 import requests
 
-from count_average_salaries import predict_salary_hh
+from count_average_salaries import predict_salary
 
 
 def search_vacancies(language, url, page=None):
@@ -23,10 +23,10 @@ def predict_rub_salary(language, url):
     salaries, vacancies_found = get_salaries(language, url)
     predictioned_salaries = []
     for salary in salaries:
-        currency = salary['currency']
-        payment_from = salary['from']
-        payment_to = salary['to']
-        predict_salary_hh(currency, payment_from, payment_to, predictioned_salaries)
+        if salary['currency'] == 'RUR':
+            payment_from = salary['from']
+            payment_to = salary['to']
+            predict_salary(payment_from, payment_to, predictioned_salaries)
     return predictioned_salaries, vacancies_found
 
 
