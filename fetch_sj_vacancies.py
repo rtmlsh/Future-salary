@@ -55,7 +55,7 @@ def get_salaries(language, url, sj_token):
     return salaries, vacancies['total']
 
 
-def average_sj_salaries(programming_languages, url, sj_token):
+def get_sj_salary_stats(programming_languages, url, sj_token):
     salary_statistics = {}
     for language in programming_languages:
         predictioned_salaries, vacancies_found = predict_rub_salary_for_sj(

@@ -41,7 +41,7 @@ def get_salaries(language, url):
     return salaries, vacancies['found']
 
 
-def average_hh_salaries(programming_languages, url):
+def get_hh_salary_stats(programming_languages, url):
     salary_statistics = {}
     for language in programming_languages:
         predictioned_salaries, vacancies_found = predict_rub_salary(language, url)
