@@ -20,14 +20,14 @@ def search_vacancies(language, url, page=None):
 
 
 def predict_rub_salary(language, url):
-    salaries = get_salaries(language, url)
+    salaries, vacancies_found = get_salaries(language, url)
     predictioned_salaries = []
     for salary in salaries:
         currency = salary['currency']
         payment_from = salary['from']
         payment_to = salary['to']
         predict_salary_hh(currency, payment_from, payment_to, predictioned_salaries)
-    return predictioned_salaries
+    return predictioned_salaries, vacancies_found
 
 
 def get_salaries(language, url):
@@ -38,15 +38,15 @@ def get_salaries(language, url):
             salaries.append(salary['salary'])
         if page >= vacancies['pages']:
             break
-    return salaries
+    return salaries, vacancies['found']
 
 
 def average_hh_salaries(programming_languages, url):
     salary_statistics = {}
     for language in programming_languages:
-        predictioned_salaries = predict_rub_salary(language, url)
+        predictioned_salaries, vacancies_found = predict_rub_salary(language, url)
         salary_statistics[language] = {
-            'vacancies_found': search_vacancies(language, url)['found'],
+            'vacancies_found': vacancies_found,
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }

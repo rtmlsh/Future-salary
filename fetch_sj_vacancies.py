@@ -7,6 +7,7 @@ import requests
 from count_average_salaries import predict_salary_sj
 
 
+
 def search_sj_vacancies(language, url, sj_token, page=None):
     header = {'X-Api-App-Id': sj_token}
     payload = {
@@ -22,14 +23,14 @@ def search_sj_vacancies(language, url, sj_token, page=None):
 
 
 def predict_rub_salary_for_sj(language, url, sj_token):
-    salaries = get_salaries(language, url, sj_token)
+    salaries, vacancies_found = get_salaries(language, url, sj_token)
     predictioned_salaries = []
     for salary in salaries:
         currency = salary['currency']
         payment_from = salary['payment_from']
         payment_to = salary['payment_to']
         predict_salary_sj(currency, payment_from, payment_to, predictioned_salaries)
-    return predictioned_salaries
+    return predictioned_salaries, vacancies_found
 
 
 def get_salaries(language, url, sj_token):
@@ -52,20 +53,19 @@ def get_salaries(language, url, sj_token):
             )
         if page >= all_pages:
             break
-    return salaries
+    return salaries, vacancies['total']
 
 
 def average_sj_salaries(programming_languages, url, sj_token):
     salary_statistics = {}
     for language in programming_languages:
-        predictioned_salaries = predict_rub_salary_for_sj(
+        predictioned_salaries, vacancies_found = predict_rub_salary_for_sj(
             language,
             url,
             sj_token
         )
         salary_statistics[language] = {
-            'vacancies_found': search_sj_vacancies(language, url, sj_token)
-            ['total'],
+            'vacancies_found': vacancies_found,
             'vacancies_processed': len(predictioned_salaries),
             'average_salary': int(numpy.mean(predictioned_salaries))
         }
