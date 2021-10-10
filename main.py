@@ -40,7 +40,11 @@ def show_hh_table(programming_languages):
 
 def show_sj_table(programming_languages, sj_token):
     sj_api_url = 'https://api.superjob.ru/2.0/vacancies/'
-    salary_statistics = get_sj_salary_stats(programming_languages, sj_api_url, sj_token)
+    salary_statistics = get_sj_salary_stats(
+        programming_languages,
+        sj_api_url,
+        sj_token
+    )
     sj_table_stats = insert_table(salary_statistics)
     table = AsciiTable(sj_table_stats)
     table.title = 'Superjob'
