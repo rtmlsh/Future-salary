@@ -1,4 +1,3 @@
-import math
 from itertools import count
 
 import numpy
@@ -34,25 +33,26 @@ def predict_rub_salary_for_sj(language, url, sj_token):
 
 def get_salaries(language, url, sj_token):
     salaries = []
-    page_result = 20
     for page in count(0):
         vacancies = search_sj_vacancies(language, url, sj_token, page=page)
-        all_pages = math.ceil(search_sj_vacancies(
-            language,
-            url,
-            sj_token
-        )['total'] / page_result)
-        for vacancy in vacancies['objects']:
-            salaries.append(
-                {
-                 'currency': vacancy['currency'],
-                 'payment_from': vacancy['payment_from'],
-                 'payment_to': vacancy['payment_to']
-                 }
-            )
-        if page >= all_pages:
+        if vacancies['more']:
+            get_salary_range(vacancies, salaries)
+        else:
+            get_salary_range(vacancies, salaries)
             break
     return salaries, vacancies['total']
+
+
+def get_salary_range(vacancies, salaries):
+    for vacancy in vacancies['objects']:
+        salaries.append(
+            {
+                'currency': vacancy['currency'],
+                'payment_from': vacancy['payment_from'],
+                'payment_to': vacancy['payment_to']
+            }
+        )
+    return salaries
 
 
 def get_sj_salary_stats(programming_languages, url, sj_token):
