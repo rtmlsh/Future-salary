@@ -6,8 +6,9 @@ import requests
 from count_average_salaries import predict_salary
 
 
-def search_sj_vacancies(language, url, sj_token, page=None,
+def search_sj_vacancies(language, sj_token, page=None,
                         job_area=33, publish_period=30, city_num=4):
+    url = 'https://api.superjob.ru/2.0/vacancies/'
     header = {'X-Api-App-Id': sj_token}
     payload = {
         'catalogues': job_area,
@@ -21,8 +22,8 @@ def search_sj_vacancies(language, url, sj_token, page=None,
     return response.json()
 
 
-def predict_rub_salary_for_sj(language, url, sj_token):
-    salaries, vacancies_found = get_salaries(language, url, sj_token)
+def predict_rub_salary_for_sj(language, sj_token):
+    salaries, vacancies_found = get_salaries(language, sj_token)
     predicted_salaries = []
     for salary in salaries:
         if salary['currency'] == 'rub':
@@ -32,10 +33,10 @@ def predict_rub_salary_for_sj(language, url, sj_token):
     return predicted_salaries, vacancies_found
 
 
-def get_salaries(language, url, sj_token):
+def get_salaries(language, sj_token):
     salaries = []
     for page in count(0):
-        vacancies = search_sj_vacancies(language, url, sj_token, page=page)
+        vacancies = search_sj_vacancies(language, sj_token, page=page)
         if not vacancies['more']:
             get_salary_range(vacancies, salaries)
             break
@@ -55,12 +56,11 @@ def get_salary_range(vacancies, salaries):
     return salaries
 
 
-def get_sj_salary_stats(programming_languages, url, sj_token):
+def get_sj_salary_stats(programming_languages, sj_token):
     salary_statistics = {}
     for language in programming_languages:
         predicted_salaries, vacancies_found = predict_rub_salary_for_sj(
             language,
-            url,
             sj_token
         )
         salary_statistics[language] = {

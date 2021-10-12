@@ -6,7 +6,8 @@ import requests
 from count_average_salaries import predict_salary
 
 
-def search_vacancies(language, url, page=None, city_num=1, publish_period=30):
+def search_vacancies(language, page=None, city_num=1, publish_period=30):
+    url = 'https://api.hh.ru/vacancies/'
     payload = {
         'text': f'Программист {language}',
         'area': city_num,
@@ -19,8 +20,8 @@ def search_vacancies(language, url, page=None, city_num=1, publish_period=30):
     return response.json()
 
 
-def predict_rub_salary(language, url):
-    salaries, vacancies_found = get_salaries(language, url)
+def predict_rub_salary(language):
+    salaries, vacancies_found = get_salaries(language)
     predicted_salaries = []
     for salary in salaries:
         if salary['currency'] == 'RUR':
@@ -30,10 +31,10 @@ def predict_rub_salary(language, url):
     return predicted_salaries, vacancies_found
 
 
-def get_salaries(language, url):
+def get_salaries(language):
     salaries = []
     for page in count(0):
-        vacancies = search_vacancies(language, url, page=page)
+        vacancies = search_vacancies(language, page=page)
         for salary in vacancies['items']:
             salaries.append(salary['salary'])
         if page >= vacancies['pages']:
@@ -41,11 +42,11 @@ def get_salaries(language, url):
     return salaries, vacancies['found']
 
 
-def get_hh_salary_stats(programming_languages, url):
+def get_hh_salary_stats(programming_languages):
     salary_statistics = {}
     for language in programming_languages:
         predicted_salaries, vacancies_found = \
-            predict_rub_salary(language, url)
+            predict_rub_salary(language)
         salary_statistics[language] = {
             'vacancies_found': vacancies_found,
             'vacancies_processed': len(predicted_salaries),
