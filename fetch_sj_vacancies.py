@@ -6,13 +6,14 @@ import requests
 from count_average_salaries import predict_salary
 
 
-def search_sj_vacancies(language, url, sj_token, page=None):
+def search_sj_vacancies(language, url, sj_token, page=None,
+                        job_area=33, publish_period=30, city_num=4):
     header = {'X-Api-App-Id': sj_token}
     payload = {
-        'catalogues': 33,
-        'period': 30,
+        'catalogues': job_area,
+        'period': publish_period,
         'keyword': f'Программист {language}',
-        'town': 4,
+        'town': city_num,
         'page': page
     }
     response = requests.get(url, headers=header, params=payload)

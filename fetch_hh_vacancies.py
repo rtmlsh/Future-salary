@@ -6,11 +6,11 @@ import requests
 from count_average_salaries import predict_salary
 
 
-def search_vacancies(language, url, page=None):
+def search_vacancies(language, url, page=None, city_num=1, publish_period=30):
     payload = {
         'text': f'Программист {language}',
-        'area': 1,
-        'period': 30,
+        'area': city_num,
+        'period': publish_period,
         'only_with_salary': 'True',
         'page': page
     }
