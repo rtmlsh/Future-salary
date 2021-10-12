@@ -35,11 +35,10 @@ def get_salaries(language, url, sj_token):
     salaries = []
     for page in count(0):
         vacancies = search_sj_vacancies(language, url, sj_token, page=page)
-        if vacancies['more']:
-            get_salary_range(vacancies, salaries)
-        else:
+        if not vacancies['more']:
             get_salary_range(vacancies, salaries)
             break
+        get_salary_range(vacancies, salaries)
     return salaries, vacancies['total']
 
 
