@@ -33,7 +33,7 @@ def show_table(salary_statistics, table_title):
     table_stats = insert_table(salary_statistics)
     table = AsciiTable(table_stats)
     table.title = table_title
-    print(table.table)
+    return table.table
 
 
 if __name__ == '__main__':

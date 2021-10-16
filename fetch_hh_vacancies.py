@@ -27,7 +27,8 @@ def predict_rub_salary(language):
         if salary['currency'] == 'RUR':
             payment_from = salary['from']
             payment_to = salary['to']
-            predicted_salaries.append(predict_salary(payment_from, payment_to))
+            if predict_salary(payment_from, payment_to):
+                predicted_salaries.append(predict_salary(payment_from, payment_to))
     return predicted_salaries, vacancies_found
 
 
