@@ -30,7 +30,10 @@ def predict_rub_salary_for_sj(language, sj_token):
             payment_from = salary['payment_from']
             payment_to = salary['payment_to']
             if predict_salary(payment_from, payment_to):
-                predicted_salaries.append(predict_salary(payment_from, payment_to))
+                predicted_salaries.append(predict_salary(
+                    payment_from,
+                    payment_to
+                ))
     return predicted_salaries, vacancies_found
 
 

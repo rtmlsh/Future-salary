@@ -28,7 +28,10 @@ def predict_rub_salary(language):
             payment_from = salary['from']
             payment_to = salary['to']
             if predict_salary(payment_from, payment_to):
-                predicted_salaries.append(predict_salary(payment_from, payment_to))
+                predicted_salaries.append(predict_salary(
+                    payment_from,
+                    payment_to
+                ))
     return predicted_salaries, vacancies_found
 
 
