@@ -39,22 +39,23 @@ def get_salaries(language, sj_token):
     for page in count(0):
         vacancies = search_sj_vacancies(language, sj_token, page=page)
         if not vacancies['more']:
-            get_salary_range(vacancies, salaries)
+            salaries.extend(get_salary_range(vacancies))
             break
-        get_salary_range(vacancies, salaries)
+        salaries.extend(get_salary_range(vacancies))
     return salaries, vacancies['total']
 
 
-def get_salary_range(vacancies, salaries):
+def get_salary_range(vacancies):
+    salary_range = []
     for vacancy in vacancies['objects']:
-        salaries.append(
+        salary_range.append(
             {
                 'currency': vacancy['currency'],
                 'payment_from': vacancy['payment_from'],
                 'payment_to': vacancy['payment_to']
             }
         )
-    return salaries
+    return salary_range
 
 
 def get_sj_salary_stats(programming_languages, sj_token):
