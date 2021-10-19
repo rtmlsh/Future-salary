@@ -22,19 +22,6 @@ def search_sj_vacancies(language, sj_token, page=None,
     return response.json()
 
 
-def predict_rub_salary_for_sj(language, sj_token):
-    salaries, vacancies_found = get_salaries(language, sj_token)
-    predicted_salaries = []
-    for salary in salaries:
-        if salary['currency'] == 'rub':
-            payment_from = salary['payment_from']
-            payment_to = salary['payment_to']
-            average_salary = predict_salary(payment_from, payment_to)
-            if average_salary:
-                predicted_salaries.append(average_salary)
-    return predicted_salaries, vacancies_found
-
-
 def get_salaries(language, sj_token):
     salaries = []
     for page in count(0):
@@ -48,20 +35,19 @@ def get_salaries(language, sj_token):
 def get_salary_range(vacancies):
     salary_range = []
     for vacancy in vacancies['objects']:
-        salary_range.append(
-            {
-                'currency': vacancy['currency'],
-                'payment_from': vacancy['payment_from'],
-                'payment_to': vacancy['payment_to']
-            }
-        )
+        if vacancy['currency'] == 'rub':
+            payment_from = vacancy['payment_from']
+            payment_to = vacancy['payment_to']
+            average_salary = predict_salary(payment_from, payment_to)
+            if average_salary:
+                salary_range.append(average_salary)
     return salary_range
 
 
 def get_sj_salary_stats(programming_languages, sj_token):
     salary_statistics = {}
     for language in programming_languages:
-        predicted_salaries, vacancies_found = predict_rub_salary_for_sj(
+        predicted_salaries, vacancies_found = get_salaries(
             language,
             sj_token
         )
