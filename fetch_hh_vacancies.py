@@ -38,12 +38,12 @@ def predict_rub_salary(language):
 def get_salaries(language):
     salaries = []
     for page in count(0):
-        vacancies = search_vacancies(language, page=page)
-        for salary in vacancies['items']:
+        vacancies_page = search_vacancies(language, page=page)
+        for salary in vacancies_page['items']:
             salaries.append(salary['salary'])
-        if page >= vacancies['pages']:
+        if page >= vacancies_page['pages']:
             break
-    return salaries, vacancies['found']
+    return salaries, vacancies_page['found']
 
 
 def get_hh_salary_stats(programming_languages):

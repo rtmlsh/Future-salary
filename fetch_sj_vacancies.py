@@ -40,12 +40,12 @@ def predict_rub_salary_for_sj(language, sj_token):
 def get_salaries(language, sj_token):
     salaries = []
     for page in count(0):
-        vacancies = search_sj_vacancies(language, sj_token, page=page)
-        if not vacancies['more']:
-            salaries.extend(get_salary_range(vacancies))
+        vacancies_page = search_sj_vacancies(language, sj_token, page=page)
+        if not vacancies_page['more']:
+            salaries.extend(get_salary_range(vacancies_page))
             break
-        salaries.extend(get_salary_range(vacancies))
-    return salaries, vacancies['total']
+        salaries.extend(get_salary_range(vacancies_page))
+    return salaries, vacancies_page['total']
 
 
 def get_salary_range(vacancies):
