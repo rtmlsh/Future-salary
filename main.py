@@ -29,7 +29,7 @@ def insert_table(salary_statistics):
     return table_stats
 
 
-def show_table(salary_statistics, table_title):
+def create_table(salary_statistics, table_title):
     table_stats = insert_table(salary_statistics)
     table = AsciiTable(table_stats)
     table.title = table_title
@@ -63,5 +63,5 @@ if __name__ == '__main__':
     sj_salary_statistics = get_sj_salary_stats(programming_languages, sj_token)
     hh_salary_statistics = get_hh_salary_stats(programming_languages)
 
-    print(show_table(sj_salary_statistics, sj_table_title))
-    print(show_table(hh_salary_statistics, hh_table_title))
+    print(create_table(sj_salary_statistics, sj_table_title))
+    print(create_table(hh_salary_statistics, hh_table_title))
