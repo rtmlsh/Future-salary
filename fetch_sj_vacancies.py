@@ -39,10 +39,9 @@ def get_salaries(language, sj_token):
     salaries = []
     for page in count(0):
         vacancies_page = search_sj_vacancies(language, sj_token, page=page)
-        if not vacancies_page['more']:
-            salaries.extend(get_salary_range(vacancies_page))
-            break
         salaries.extend(get_salary_range(vacancies_page))
+        if not vacancies_page['more']:
+            break
     return salaries, vacancies_page['total']
 
 
