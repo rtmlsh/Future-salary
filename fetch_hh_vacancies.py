@@ -20,7 +20,18 @@ def search_vacancies(language, page=None, city_num=1, publish_period=30):
     return response.json()
 
 
-def predict_rub_salary(language):
+def get_salaries(language):
+    salaries = []
+    for page in count(0):
+        vacancies_page = search_vacancies(language, page=page)
+        for salary in vacancies_page['items']:
+            salaries.append(salary['salary'])
+        if page >= vacancies_page['pages']:
+            break
+    return salaries, vacancies_page['found']
+
+
+def predict_rub_salaries(language):
     salaries, vacancies_found = get_salaries(language)
     predicted_salaries = []
     for salary in salaries:
@@ -33,22 +44,11 @@ def predict_rub_salary(language):
     return predicted_salaries, vacancies_found
 
 
-def get_salaries(language):
-    salaries = []
-    for page in count(0):
-        vacancies_page = search_vacancies(language, page=page)
-        for salary in vacancies_page['items']:
-            salaries.append(salary['salary'])
-        if page >= vacancies_page['pages']:
-            break
-    return salaries, vacancies_page['found']
-
-
 def get_hh_salary_stats(programming_languages):
     salary_statistics = {}
     for language in programming_languages:
         predicted_salaries, vacancies_found = \
-            predict_rub_salary(language)
+            predict_rub_salaries(language)
         salary_statistics[language] = {
             'vacancies_found': vacancies_found,
             'vacancies_processed': len(predicted_salaries),
