@@ -21,16 +21,24 @@ def search_vacancies(language, page=None, city_num=1, publish_period=30):
 
 
 def predict_rub_salary(language):
+    salaries, vacancies_found = get_salaries(language)
+    predicted_salaries = []
+    for salary in salaries:
+        if salary['currency'] == 'RUR':
+            payment_from = salary['from']
+            payment_to = salary['to']
+            average_salary = predict_salary(payment_from, payment_to)
+            if average_salary:
+                predicted_salaries.append(average_salary)
+    return predicted_salaries, vacancies_found
+
+
+def get_salaries(language):
     salaries = []
     for page in count(0):
         vacancies_page = search_vacancies(language, page=page)
         for salary in vacancies_page['items']:
-            if salary['salary']['currency'] == 'RUR':
-                payment_from = salary['salary']['from']
-                payment_to = salary['salary']['to']
-                average_salary = predict_salary(payment_from, payment_to)
-                if average_salary:
-                    salaries.append(average_salary)
+            salaries.append(salary['salary'])
         if page >= vacancies_page['pages']:
             break
     return salaries, vacancies_page['found']
